@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Runtime SQLite Database & Backups
+data/*.db*
+data/backups/
+*.db
+*.db-wal
+*.db-shm
+
+# OS & Editor Files
+.DS_Store
+._*
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log

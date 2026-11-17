@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Instructa-Gotchi: TINKO Robot Companion</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts: Fredoka & Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'maker-yellow': '#FFC928',
+            'signal-orange': '#F28B24',
+            'warm-ivory': '#FFF9EF',
+            'workshop-cream': '#F5F0E6',
+            'workshop-card': '#FFFDF8',
+            'graphite': '#242522',
+            'graphite-muted': '#4A4B47',
+            'electric-cyan': '#38BDF8',
+            'workshop-green': '#83A978',
+            'wood-brown': '#7E4C20',
+            'warm-coral': '#ED735C',
+          },
+          fontFamily: {
+            brand: ['Fredoka', 'system-ui', 'sans-serif'],
+            body: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'maker': '0 8px 24px -4px rgba(126, 76, 32, 0.12), 0 3px 6px -2px rgba(126, 76, 32, 0.08)',
+            'maker-lg': '0 16px 36px -6px rgba(126, 76, 32, 0.16), 0 6px 12px -3px rgba(126, 76, 32, 0.1)',
+            'inset-panel': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+            'screen-inner': 'inset 0 2px 6px 0 rgba(126, 76, 32, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #F5F0E6;
+      color: #242522;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .font-brand { font-family: 'Fredoka', cursive, sans-serif; }
+    .pattern-grid {
+      background-image: radial-gradient(rgba(242, 139, 36, 0.18) 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+    }
+    .custom-scroll::-webkit-scrollbar { display: none; }
+    .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+    .tactile-btn:active {
+      transform: translateY(2px);
+    }
+    .mode-btn.active {
+      background-color: #F28B24 !important;
+      color: #FFFFFF !important;
+      font-weight: 700;
+    }
+    @keyframes turbine-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spin-fan {
+      animation: turbine-spin 0.4s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-workshop-cream text-graphite min-h-screen selection:bg-maker-yellow selection:text-graphite">
+  <div class="max-w-md mx-auto min-h-screen bg-workshop-cream shadow-2xl relative pb-24 overflow-hidden pattern-grid border-x border-amber-200/60">
+
+    <!-- Top Hardware Status Bar -->
+    <header class="sticky top-0 z-50 bg-warm-ivory/95 backdrop-blur-md px-4 py-2 flex items-center justify-between border-b border-amber-200/70 text-xs font-semibold">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-workshop-green animate-ping"></span>
+        <span class="text-workshop-green font-brand font-bold text-xs">UNIHIKER LIVE</span>
+        <span id="ip-badge" class="text-[10px] font-mono text-graphite-muted bg-amber-100/70 px-1.5 py-0.5 rounded border border-amber-300/60">10.206.221.195</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- Sound Toggle -->
+        <button id="sound-btn" onclick="toggleAudio()" class="text-xs text-graphite-muted hover:text-signal-orange transition-colors p-1" title="Toggle Robot Audio">
+          🔊
+        </button>
+        <!-- Voltage Pill -->
+        <div class="flex items-center gap-1 bg-amber-100 text-signal-orange px-2 py-0.5 rounded-full border border-amber-300 font-bold text-[10px]">
+          <span id="header-volt-icon">⚡</span>
+          <span id="header-voltage">4.19V</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Robot Tamagotchi Hero Header Card -->
+    <div class="p-3 pt-2">
+      <div class="bg-gradient-to-b from-warm-ivory to-amber-50/90 rounded-3xl p-4 border-2 border-amber-200 shadow-maker relative overflow-hidden">
+        
+        <!-- Header Info Row -->
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-maker-yellow flex items-center justify-center border-2 border-graphite shadow-sm">
+              <span class="text-base">🤖</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-brand font-bold text-base text-graphite leading-none">TINKO</span>
+                <span id="robot-fw-badge" class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-100 text-signal-orange border border-amber-300">FW v1.0.4</span>
+              </div>
+              <span class="text-[9px] text-graphite-muted font-mono block">Maker Robot Companion</span>
+            </div>
+          </div>
+          <span id="robot-level-pill" class="font-brand font-bold text-xs text-signal-orange bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-xl shadow-xs">
+            Lv. 01
+          </span>
+        </div>
+
+        <!-- Robot Screen Display Frame -->
+        <div class="bg-white rounded-2xl p-3 border border-amber-200 shadow-xs flex items-center gap-3">
+          <!-- Character Avatar -->
+          <div id="avatar-container" class="w-16 h-16 rounded-2xl bg-amber-100 border-2 border-maker-yellow flex items-center justify-center overflow-hidden shadow-inner shrink-0 relative">
+            <img id="robot-avatar" src="/assets/characters/tinko_avatar.png" alt="Tinko Robot" class="w-full h-full object-cover">
+            <!-- Charging Overlay -->
+            <div id="dock-bolt-indicator" class="hidden absolute inset-0 bg-amber-400/30 backdrop-blur-[1px] flex items-center justify-center text-xl animate-bounce">
+              ⚡
+            </div>
+          </div>
+
+          <!-- Speech & Status -->
+          <div class="flex-1 min-w-0">
+            <!-- Speech Bubble -->
+            <div class="bg-amber-50/80 rounded-xl p-2 border border-amber-200/80 mb-1.5">
+              <p id="robot-speech" class="text-xs font-semibold text-graphite leading-snug line-clamp-2">
+                "Ready to build together? Battery charged."
+              </p>
+            </div>
+            <!-- Live UNIHIKER M10 Screen Status -->
+            <div class="flex items-center justify-between text-[10px] font-mono">
+              <div class="flex items-center gap-1 text-signal-orange font-bold truncate">
+                <span class="w-1.5 h-1.5 rounded-full bg-signal-orange animate-ping shrink-0"></span>
+                <span id="unihiker-activity-badge">Soldering Circuit</span>
+              </div>
+              <span id="dock-status-text" class="text-graphite-muted font-bold shrink-0">🔋 Battery Ready</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- XP Progress Bar -->
+        <div class="mt-2.5 pt-2 border-t border-amber-200/70">
+          <div class="flex justify-between items-center text-[10px] font-mono mb-1">
+            <span class="text-graphite-muted">FIRMWARE EXP:</span>
+            <span id="xp-text" class="text-signal-orange font-bold">45 / 100 XP</span>
+          </div>
+          <div class="w-full h-2 bg-amber-100 rounded-full overflow-hidden p-0.5 border border-amber-300">
+            <div id="xp-bar" class="h-full bg-gradient-to-r from-maker-yellow to-signal-orange rounded-full transition-all duration-500" style="width: 45%"></div>
+          </div>
+        </div>
+
+        <!-- 4 Robot Vitals Cards -->
+        <div class="grid grid-cols-4 gap-1.5 mt-2.5 text-center font-mono">
+          <div class="p-1.5 rounded-xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-[9px] text-graphite-muted uppercase block">Battery</span>
+            <span id="vital-battery" class="text-xs font-bold text-signal-orange block font-brand">85%</span>
+            <div class="w-full h-1 bg-amber-100 rounded-full mt-1 overflow-hidden">
+              <div id="vital-battery-bar" class="h-full bg-signal-orange" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <div class="p-1.5 rounded-xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-[9px] text-graphite-muted uppercase block">Temp</span>
+            <span id="vital-temp" class="text-xs font-bold text-electric-cyan block font-brand">36.5°C</span>
+            <div class="w-full h-1 bg-blue-100 rounded-full mt-1 overflow-hidden">
+              <div id="vital-temp-bar" class="h-full bg-electric-cyan" style="width: 55%"></div>
+            </div>
+          </div>
+
+          <div class="p-1.5 rounded-xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-[9px] text-graphite-muted uppercase block">Gears</span>
+            <span id="vital-gears" class="text-xs font-bold text-workshop-green block font-brand">95%</span>
+            <div class="w-full h-1 bg-green-100 rounded-full mt-1 overflow-hidden">
+              <div id="vital-gears-bar" class="h-full bg-workshop-green" style="width: 95%"></div>
+            </div>
+          </div>
+
+          <div class="p-1.5 rounded-xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-[9px] text-graphite-muted uppercase block">Health</span>
+            <span id="vital-health" class="text-xs font-bold text-warm-coral block font-brand">100%</span>
+            <div class="w-full h-1 bg-red-100 rounded-full mt-1 overflow-hidden">
+              <div id="vital-health-bar" class="h-full bg-warm-coral" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Quick Action Deck (Immediate Robot Care) -->
+    <div class="px-3 py-1">
+      <div class="grid grid-cols-4 gap-2">
+        <button onclick="handleQuickCare('charge')" class="tactile-btn flex flex-col items-center justify-center p-2 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+          <span class="text-xl">⚡</span>
+          <span class="text-[10px] font-brand font-bold text-graphite mt-0.5">Charge</span>
+        </button>
+        <button onclick="handleQuickCare('oil')" class="tactile-btn flex flex-col items-center justify-center p-2 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+          <span class="text-xl">⚙️</span>
+          <span class="text-[10px] font-brand font-bold text-graphite mt-0.5">Oil Gears</span>
+        </button>
+        <button onclick="switchTab('minigames')" class="tactile-btn flex flex-col items-center justify-center p-2 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+          <span class="text-xl">🎮</span>
+          <span class="text-[10px] font-brand font-bold text-graphite mt-0.5">Games</span>
+        </button>
+        <button onclick="handleQuickCare('pet')" class="tactile-btn flex flex-col items-center justify-center p-2 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+          <span class="text-xl">❤️</span>
+          <span class="text-[10px] font-brand font-bold text-graphite mt-0.5">Pet Bot</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tab Pills -->
+    <div class="px-3 pt-2">
+      <div class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1">
+        <button onclick="switchTab('dock')" id="tab-btn-dock" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-signal-orange text-white shadow-sm">
+          ⚡ Power Dock
+        </button>
+        <button onclick="switchTab('tuneup')" id="tab-btn-tuneup" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200">
+          🔧 Tune-Up Bay
+        </button>
+        <button onclick="switchTab('minigames')" id="tab-btn-minigames" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200">
+          🎮 Minigames
+        </button>
+        <button onclick="switchTab('parts')" id="tab-btn-parts" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200">
+          🧰 Parts & Craft
+        </button>
+        <button onclick="switchTab('unihiker')" id="tab-btn-unihiker" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200">
+          📡 Remote Direct
+        </button>
+        <button onclick="switchTab('firmware')" id="tab-btn-firmware" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200">
+          💾 Firmware
+        </button>
+        <button onclick="switchTab('diary')" id="tab-btn-diary" class="tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200">
+          📜 Quests & Log
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 1: POWER DOCK (CHARGING STATION) -->
+    <div id="tab-content-dock" class="tab-panel px-3 py-2 space-y-3">
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <div class="flex justify-between items-center mb-3">
+          <div>
+            <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5">
+              <span>⚡</span> High-Voltage Charging Dock
+            </h3>
+            <p class="text-[10px] text-graphite-muted">Regulate LiPo battery charge & dock cradle</p>
+          </div>
+          <span id="dock-active-badge" class="font-mono text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-graphite border border-amber-300">
+            DOCK IDLE
+          </span>
+        </div>
+
+        <!-- Master Docking Switch Lever -->
+        <div class="bg-warm-ivory rounded-2xl p-3 border border-amber-200 flex items-center justify-between mb-3">
+          <div>
+            <span class="font-brand font-bold text-xs text-graphite block">DOCKING LEVER</span>
+            <span class="text-[10px] text-graphite-muted">Plug Tinko into charging terminal</span>
+          </div>
+          <button onclick="toggleDockCharging()" id="dock-toggle-btn" class="tactile-btn px-4 py-2 rounded-xl bg-signal-orange text-white font-brand font-bold text-xs shadow-sm hover:brightness-105 active:scale-95 transition-all">
+            ENGAGE DOCK
+          </button>
+        </div>
+
+        <!-- Detailed Voltage & Power Readout -->
+        <div class="grid grid-cols-3 gap-2 text-center font-mono">
+          <div class="bg-white p-2 rounded-xl border border-amber-200">
+            <span class="text-[9px] text-graphite-muted block uppercase">Voltage</span>
+            <span id="dock-readout-volts" class="font-brand text-xs font-bold text-signal-orange block mt-0.5">4.19 V</span>
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-amber-200">
+            <span class="text-[9px] text-graphite-muted block uppercase">Current</span>
+            <span id="dock-readout-current" class="font-brand text-xs font-bold text-electric-cyan block mt-0.5">0.0 A</span>
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-amber-200">
+            <span class="text-[9px] text-graphite-muted block uppercase">Health</span>
+            <span class="font-brand text-xs font-bold text-workshop-green block mt-0.5">99.2%</span>
+          </div>
+        </div>
+
+        <!-- Quick Charge Methods -->
+        <div class="mt-3 pt-3 border-t border-amber-200 grid grid-cols-3 gap-2 text-[10px]">
+          <button onclick="sendCareAction('feed')" class="p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-center transition-all">
+            <span class="text-sm block">⚡</span>
+            <span class="font-bold text-signal-orange block font-brand">USB-C Turbo</span>
+            <span class="text-[9px] text-graphite-muted">+35% Fast</span>
+          </button>
+          <button onclick="sendCareAction('feed')" class="p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-center transition-all">
+            <span class="text-sm block">🔋</span>
+            <span class="font-bold text-electric-cyan block font-brand">Wireless Pad</span>
+            <span class="text-[9px] text-graphite-muted">+25% Normal</span>
+          </button>
+          <button onclick="sendCareAction('feed')" class="p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-center transition-all">
+            <span class="text-sm block">☀️</span>
+            <span class="font-bold text-workshop-green block font-brand">Solar Array</span>
+            <span class="text-[9px] text-graphite-muted">+15% Trickle</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TUNE-UP BAY (MAINTENANCE) -->
+    <div id="tab-content-tuneup" class="tab-panel hidden px-3 py-2 space-y-3">
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5 mb-1">
+          <span>🔧</span> Robot Tune-Up & Thermals
+        </h3>
+        <p class="text-[10px] text-graphite-muted mb-3">Mechanical maintenance, servo torque, and cooling</p>
+
+        <!-- Thermal Monitoring & Turbine Fan -->
+        <div class="bg-warm-ivory rounded-2xl p-3 border border-amber-200 mb-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div id="fan-icon-spin" class="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center text-electric-cyan text-lg">
+                💨
+              </div>
+              <div>
+                <span class="font-brand font-bold text-xs text-graphite block">TURBINE COOLING FAN</span>
+                <span id="fan-status-label" class="text-[10px] text-graphite-muted">Fan Standby (Quiet Mode)</span>
+              </div>
+            </div>
+            <button onclick="handleMaintenance('fan_toggle')" id="fan-toggle-btn" class="tactile-btn px-3 py-1.5 rounded-xl bg-white border border-amber-300 text-electric-cyan font-brand font-bold text-xs hover:bg-electric-cyan hover:text-white transition-all shadow-xs">
+              BOOST FAN
+            </button>
+          </div>
+        </div>
+
+        <!-- Maintenance Action Grid -->
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="handleMaintenance('oil_gears')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">⚙️</span>
+            <span class="font-bold text-xs text-graphite block font-brand">Degrease & Oil</span>
+            <span class="text-[9px] text-graphite-muted">Synthetic Teflon lube for joint gears</span>
+          </button>
+          <button onclick="handleMaintenance('tighten_chassis')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">🔩</span>
+            <span class="font-bold text-xs text-graphite block font-brand">Torque Screws</span>
+            <span class="text-[9px] text-graphite-muted">0.8 Nm torque on chassis & servos</span>
+          </button>
+          <button onclick="handleMaintenance('thermal_paste')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">❄️</span>
+            <span class="font-bold text-xs text-graphite block font-brand">Thermal Paste</span>
+            <span class="text-[9px] text-graphite-muted">Diamond paste renewal (-8°C)</span>
+          </button>
+          <button onclick="handleMaintenance('run_diagnostics')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">📊</span>
+            <span class="font-bold text-xs text-graphite block font-brand">Diagnostics</span>
+            <span class="text-[9px] text-graphite-muted">Scan ROM, bus telemetry & RAM</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MINIGAMES (PLAYABLE IN PHONE) -->
+    <div id="tab-content-minigames" class="tab-panel hidden px-3 py-2 space-y-3">
+      <!-- Minigame Selector -->
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="selectMinigame('wire_fixer')" id="btn-select-wire" class="p-2.5 rounded-2xl bg-signal-orange text-white font-brand font-bold text-xs shadow-sm">
+          ⚡ Circuit Wire Fixer
+        </button>
+        <button onclick="selectMinigame('rhythm_beat')" id="btn-select-rhythm" class="p-2.5 rounded-2xl bg-white text-graphite font-brand font-bold text-xs border border-amber-200">
+          🎵 Workshop Rhythm
+        </button>
+      </div>
+
+      <!-- GAME 1: CIRCUIT WIRE FIXER -->
+      <div id="game-wire-fixer" class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h4 class="font-brand font-bold text-xs text-graphite">CIRCUIT WIRE SPLICER</h4>
+            <p class="text-[9px] text-graphite-muted">Tap matching pairs to complete circuit!</p>
+          </div>
+          <div class="text-xs font-mono">
+            <span class="text-graphite-muted">TIMER:</span>
+            <span id="wire-timer" class="font-bold text-signal-orange font-brand text-sm">15s</span>
+          </div>
+        </div>
+
+        <!-- Wire Game Canvas / Area -->
+        <div class="bg-warm-ivory rounded-2xl p-3 border border-amber-200 my-2">
+          <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+            <!-- Left Source Terminals -->
+            <div class="space-y-2">
+              <span class="text-[9px] text-graphite-muted font-bold block uppercase">Source Bus</span>
+              <button onclick="selectWireTerminal('left', 'red')" id="term-left-red" class="wire-term w-full p-2 rounded-xl bg-red-100 border border-red-300 text-red-800 font-bold flex items-center justify-between shadow-xs">
+                <span>🔴 +5V VCC</span>
+              </button>
+              <button onclick="selectWireTerminal('left', 'black')" id="term-left-black" class="wire-term w-full p-2 rounded-xl bg-gray-100 border border-gray-400 text-gray-800 font-bold flex items-center justify-between shadow-xs">
+                <span>⚫ GND GROUND</span>
+              </button>
+              <button onclick="selectWireTerminal('left', 'yellow')" id="term-left-yellow" class="wire-term w-full p-2 rounded-xl bg-amber-100 border border-amber-400 text-amber-900 font-bold flex items-center justify-between shadow-xs">
+                <span>🟡 PWM SIGNAL</span>
+              </button>
+              <button onclick="selectWireTerminal('left', 'blue')" id="term-left-blue" class="wire-term w-full p-2 rounded-xl bg-blue-100 border border-blue-400 text-blue-900 font-bold flex items-center justify-between shadow-xs">
+                <span>🔵 I2C CLOCK</span>
+              </button>
+            </div>
+
+            <!-- Right Target Terminals -->
+            <div class="space-y-2">
+              <span class="text-[9px] text-graphite-muted font-bold block uppercase">Breadboard Pins</span>
+              <button onclick="selectWireTerminal('right', 'yellow')" id="term-right-yellow" class="wire-term w-full p-2 rounded-xl bg-amber-100 border border-amber-400 text-amber-900 font-bold flex items-center justify-between shadow-xs">
+                <span>🟡 PIN 04 (PWM)</span>
+              </button>
+              <button onclick="selectWireTerminal('right', 'red')" id="term-right-red" class="wire-term w-full p-2 rounded-xl bg-red-100 border border-red-300 text-red-800 font-bold flex items-center justify-between shadow-xs">
+                <span>🔴 PWR BUS (+5V)</span>
+              </button>
+              <button onclick="selectWireTerminal('right', 'blue')" id="term-right-blue" class="wire-term w-full p-2 rounded-xl bg-blue-100 border border-blue-400 text-blue-900 font-bold flex items-center justify-between shadow-xs">
+                <span>🔵 SCL PIN (I2C)</span>
+              </button>
+              <button onclick="selectWireTerminal('right', 'black')" id="term-right-black" class="wire-term w-full p-2 rounded-xl bg-gray-100 border border-gray-400 text-gray-800 font-bold flex items-center justify-between shadow-xs">
+                <span>⚫ CHASSIS GND</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] pt-1">
+          <span id="wire-status" class="text-graphite-muted font-medium">Tap Left then Right match!</span>
+          <button onclick="startWireGame()" id="wire-start-btn" class="tactile-btn px-3 py-1.5 rounded-xl bg-signal-orange text-white font-brand font-bold shadow-sm">
+            START SPLICING
+          </button>
+        </div>
+      </div>
+
+      <!-- GAME 2: WORKSHOP RHYTHM BEAT -->
+      <div id="game-rhythm-beat" class="hidden bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h4 class="font-brand font-bold text-xs text-graphite">WORKSHOP BEAT TRACKER</h4>
+            <p class="text-[9px] text-graphite-muted">Tap the strike pad when gear aligns!</p>
+          </div>
+          <div class="text-xs font-mono">
+            <span class="text-graphite-muted">SCORE:</span>
+            <span id="rhythm-score" class="font-bold text-signal-orange font-brand text-sm">0</span>
+          </div>
+        </div>
+
+        <!-- Rhythm Track Runway -->
+        <div class="bg-warm-ivory rounded-2xl h-40 border border-amber-200 relative overflow-hidden flex flex-col justify-end p-2 my-2">
+          <!-- Target Strike Line -->
+          <div class="absolute bottom-10 inset-x-2 h-1 bg-signal-orange/60 rounded flex items-center justify-center">
+            <span class="text-[9px] font-mono text-signal-orange font-bold bg-white px-2 rounded-full border border-signal-orange/40">STRIKE ZONE</span>
+          </div>
+          <!-- Moving Note/Gear -->
+          <div id="rhythm-note" class="absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-maker-yellow border-2 border-graphite flex items-center justify-center text-xs font-bold shadow-md transition-all" style="top: 0px;">
+            ⚙️
+          </div>
+          <!-- Bottom Big Beat Button -->
+          <button onclick="tapRhythmBeat()" class="tactile-btn w-full py-3 rounded-2xl bg-signal-orange text-white font-brand font-bold text-sm shadow-sm active:scale-95 transition-all">
+            HIT BEAT ⚡
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] pt-1">
+          <span id="rhythm-status" class="text-graphite-muted font-medium">Tap in rhythm to score bonus parts!</span>
+          <button onclick="startRhythmGame()" id="rhythm-start-btn" class="tactile-btn px-3 py-1.5 rounded-xl bg-white border border-amber-300 text-signal-orange font-brand font-bold">
+            START TRACK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PARTS & CRAFTING -->
+    <div id="tab-content-parts" class="tab-panel hidden px-3 py-2 space-y-3">
+      <!-- Parts Inventory Drawer -->
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5 mb-1">
+          <span>🧰</span> Workshop Parts Drawer
+        </h3>
+        <p class="text-[10px] text-graphite-muted mb-3">Components salvaged from builds and minigames</p>
+
+        <div id="parts-grid" class="grid grid-cols-3 gap-2 text-center">
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-xl block">⚡</span>
+            <span class="text-[10px] text-graphite-muted block">10kΩ Resistors</span>
+            <span class="font-brand text-xs font-bold text-signal-orange mt-0.5 block" id="part-count-resistor">8x</span>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-xl block">💡</span>
+            <span class="text-[10px] text-graphite-muted block">RGB LEDs</span>
+            <span class="font-brand text-xs font-bold text-electric-cyan mt-0.5 block" id="part-count-led">6x</span>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-xl block">⚙️</span>
+            <span class="text-[10px] text-graphite-muted block">Brass Gears</span>
+            <span class="font-brand text-xs font-bold text-workshop-green mt-0.5 block" id="part-count-gear">5x</span>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-xl block">🧵</span>
+            <span class="text-[10px] text-graphite-muted block">Solder Wire</span>
+            <span class="font-brand text-xs font-bold text-amber-600 mt-0.5 block" id="part-count-solder_wire">12x</span>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-xl block">🔲</span>
+            <span class="text-[10px] text-graphite-muted block">555 Timer IC</span>
+            <span class="font-brand text-xs font-bold text-purple-600 mt-0.5 block" id="part-count-timer_555">3x</span>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+            <span class="text-xl block">🌀</span>
+            <span class="text-[10px] text-graphite-muted block">Copper Coil</span>
+            <span class="font-brand text-xs font-bold text-orange-600 mt-0.5 block" id="part-count-copper_coil">4x</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crafting Bench -->
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5 mb-1">
+          <span>🔨</span> Maker Crafting Bench
+        </h3>
+        <p class="text-[10px] text-graphite-muted mb-3">Assemble gadgets to boost Tinko's capabilities and XP</p>
+
+        <div class="space-y-2">
+          <!-- Recipe 1 -->
+          <div class="p-3 rounded-2xl bg-white border border-amber-200 flex items-center justify-between shadow-xs">
+            <div>
+              <span class="font-brand font-bold text-xs text-graphite block">Titanium Solder Wand</span>
+              <span class="text-[9px] text-graphite-muted">Requires: 2x Copper Coil + 1x Resistor</span>
+            </div>
+            <button onclick="craftItem('solder_wand')" class="tactile-btn px-3 py-1.5 rounded-xl bg-signal-orange text-white font-brand font-bold text-[10px] shadow-sm">
+              CRAFT (+80 XP)
+            </button>
+          </div>
+
+          <!-- Recipe 2 -->
+          <div class="p-3 rounded-2xl bg-white border border-amber-200 flex items-center justify-between shadow-xs">
+            <div>
+              <span class="font-brand font-bold text-xs text-graphite block">Dual LED Worklight</span>
+              <span class="text-[9px] text-graphite-muted">Requires: 2x RGB LEDs + 1x Solder Wire</span>
+            </div>
+            <button onclick="craftItem('worklight')" class="tactile-btn px-3 py-1.5 rounded-xl bg-maker-yellow text-graphite font-brand font-bold text-[10px] border border-amber-300 shadow-sm">
+              CRAFT (+60 XP)
+            </button>
+          </div>
+
+          <!-- Recipe 3 -->
+          <div class="p-3 rounded-2xl bg-white border border-amber-200 flex items-center justify-between shadow-xs">
+            <div>
+              <span class="font-brand font-bold text-xs text-graphite block">Turbine Heatsink</span>
+              <span class="text-[9px] text-graphite-muted">Requires: 2x Brass Gears + 1x 555 Timer</span>
+            </div>
+            <button onclick="craftItem('turbine_fan')" class="tactile-btn px-3 py-1.5 rounded-xl bg-workshop-green text-white font-brand font-bold text-[10px] shadow-sm">
+              CRAFT (+100 XP)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: UNIHIKER REMOTE DIRECT (DIRECT DISPLAY CONTROLS) -->
+    <div id="tab-content-unihiker" class="tab-panel hidden px-3 py-2 space-y-3">
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <div class="flex justify-between items-center mb-1">
+          <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5">
+            <span>📡</span> UNIHIKER Screen Remote
+          </h3>
+          <span class="font-mono text-[9px] font-bold text-workshop-green bg-green-100 px-2 py-0.5 rounded-full border border-green-300">
+            240x320 LIVE
+          </span>
+        </div>
+        <p class="text-[10px] text-graphite-muted mb-3">Directly trigger character animations & activities on the device screen</p>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="sendRemoteCommand('solder')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">⚡</span>
+            <span class="font-brand font-bold text-xs text-graphite block">Order Soldering</span>
+            <span class="text-[9px] text-graphite-muted">Solder iron contact & sparks</span>
+          </button>
+          <button onclick="sendRemoteCommand('dance')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">🎵</span>
+            <span class="font-brand font-bold text-xs text-graphite block">Workshop Jam</span>
+            <span class="text-[9px] text-graphite-muted">Groove to synth beat with arms</span>
+          </button>
+          <button onclick="sendRemoteCommand('think')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">💡</span>
+            <span class="font-brand font-bold text-xs text-graphite block">Draft Blueprints</span>
+            <span class="text-[9px] text-graphite-muted">Chin tapping & pulsing bulb</span>
+          </button>
+          <button onclick="sendRemoteCommand('sleep')" class="p-3 rounded-2xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 text-left transition-all shadow-xs">
+            <span class="text-xl block mb-1">💤</span>
+            <span class="font-brand font-bold text-xs text-graphite block">Power Down Sleep</span>
+            <span class="text-[9px] text-graphite-muted">Cozy chest breathing & Zzz arc</span>
+          </button>
+        </div>
+
+        <!-- 8 Operating Modes Grid -->
+        <div class="mt-3 pt-3 border-t border-amber-200">
+          <span class="text-[10px] font-brand font-bold text-graphite block mb-2 uppercase">Operating Mode Selector</span>
+          <div class="grid grid-cols-4 gap-1.5 text-[11px] font-semibold text-center" id="modes-grid">
+            <button onclick="setMode('auto')" id="mode-auto" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs active">Auto</button>
+            <button onclick="setMode('workshop')" id="mode-workshop" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Workshop</button>
+            <button onclick="setMode('music')" id="mode-music" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Music</button>
+            <button onclick="setMode('game')" id="mode-game" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Game</button>
+            <button onclick="setMode('study')" id="mode-study" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Study</button>
+            <button onclick="setMode('focus')" id="mode-focus" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Focus</button>
+            <button onclick="setMode('companion')" id="mode-companion" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Companion</button>
+            <button onclick="setMode('sleep')" id="mode-sleep" class="mode-btn py-1.5 rounded-xl bg-white border border-amber-200 text-graphite shadow-xs">Sleep</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: FIRMWARE & UPGRADES -->
+    <div id="tab-content-firmware" class="tab-panel hidden px-3 py-2 space-y-3">
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5 mb-1">
+          <span>💾</span> Firmware Flash Bay
+        </h3>
+        <p class="text-[10px] text-graphite-muted mb-3">Upgrade Tinko's core logic and unlock instruction sets</p>
+
+        <div class="bg-warm-ivory rounded-2xl p-3 border border-amber-200 mb-3 text-xs">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-graphite-muted font-bold">ACTIVE FIRMWARE:</span>
+            <span id="fw-version-display" class="font-mono font-bold text-signal-orange">v1.0.4 "Spark Boot"</span>
+          </div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-graphite-muted font-bold">LEVEL:</span>
+            <span id="fw-level-display" class="font-brand font-bold text-graphite">LVL 01</span>
+          </div>
+          <button onclick="flashFirmware()" id="flash-fw-btn" class="tactile-btn w-full py-2.5 rounded-xl bg-signal-orange text-white font-brand font-bold text-xs shadow-sm hover:brightness-105 active:scale-95 transition-all">
+            FLASH NEXT FIRMWARE REVISION
+          </button>
+        </div>
+
+        <!-- Microchip Hardware Sockets -->
+        <span class="text-[10px] font-brand font-bold text-graphite block mb-2 uppercase">Microchip Hardware Sockets</span>
+        <div class="space-y-2 text-xs">
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 flex items-center justify-between shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">💎</span>
+              <div>
+                <span class="font-brand font-bold text-graphite block">Overclock Quartz Crystal</span>
+                <span class="text-[9px] text-graphite-muted">+20% Workshop crafting speed</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-workshop-green bg-green-100 px-2 py-0.5 rounded-full border border-green-300">INSTALLED</span>
+          </div>
+          <div class="p-2.5 rounded-2xl bg-white border border-amber-200 flex items-center justify-between shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">❄️</span>
+              <div>
+                <span class="font-brand font-bold text-graphite block">Liquid Metal Heatpipe</span>
+                <span class="text-[9px] text-graphite-muted">-5.0°C Core thermal threshold</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-workshop-green bg-green-100 px-2 py-0.5 rounded-full border border-green-300">INSTALLED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: LOG & QUESTS -->
+    <div id="tab-content-diary" class="tab-panel hidden px-3 py-2 space-y-3">
+      <!-- Missions -->
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5 mb-2">
+          <span>🎯</span> Daily Maker Quests
+        </h3>
+        <div id="missions-container" class="space-y-2 text-xs">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+
+      <!-- Activity Diary -->
+      <div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+        <h3 class="font-brand font-bold text-sm text-graphite flex items-center gap-1.5 mb-2">
+          <span>📜</span> Event Log
+        </h3>
+        <div id="diary-container" class="space-y-2 max-h-56 overflow-y-auto custom-scroll text-xs">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 inset-x-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-amber-200 px-4 py-2 flex justify-around items-center z-50 text-[10px] font-medium shadow-lg">
+      <button onclick="switchTab('dock')" class="nav-dock-btn flex flex-col items-center text-signal-orange font-bold">
+        <span class="text-base">⚡</span>
+        <span>Dock</span>
+      </button>
+      <button onclick="switchTab('tuneup')" class="nav-dock-btn flex flex-col items-center text-gray-500 hover:text-signal-orange">
+        <span class="text-base">🔧</span>
+        <span>Tune-Up</span>
+      </button>
+      <button onclick="switchTab('minigames')" class="nav-dock-btn flex flex-col items-center text-gray-500 hover:text-signal-orange">
+        <span class="text-base">🎮</span>
+        <span>Games</span>
+      </button>
+      <button onclick="switchTab('parts')" class="nav-dock-btn flex flex-col items-center text-gray-500 hover:text-signal-orange">
+        <span class="text-base">🧰</span>
+        <span>Parts</span>
+      </button>
+      <button onclick="switchTab('unihiker')" class="nav-dock-btn flex flex-col items-center text-gray-500 hover:text-signal-orange">
+        <span class="text-base">📡</span>
+        <span>UNIHIKER</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Audio Synthesizer & Client App Script -->
+  <script>
+    let petState = {};
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    // Web Audio Synthesizer for tactile robot sound effects
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+    }
+
+    function playSynthSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'zap') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'win') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.setValueAtTime(554.37, now + 0.08);
+          osc.frequency.setValueAtTime(659.25, now + 0.16);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'dock') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(200, now);
+          osc.frequency.linearRampToValueAtTime(450, now + 0.2);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        }
+      } catch (e) {
+        // Audio context requires gesture
+      }
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      playSynthSound('click');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      const activePanel = document.getElementById(`tab-content-${tabId}`);
+      if (activePanel) activePanel.classList.remove('hidden');
+
+      // Update pills
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-white text-graphite border border-amber-200';
+      });
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn px-3 py-1.5 rounded-xl font-brand font-bold text-xs whitespace-nowrap bg-signal-orange text-white shadow-sm';
+      }
+
+      if (tabId === 'parts') loadParts();
+      if (tabId === 'diary') { loadMissions(); loadDiary(); }
+    }
+
+    // State Polling & Dashboard Sync
+    async function fetchState() {
+      try {
+        const res = await fetch('/api/state');
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+        }
+      } catch (err) {
+        console.warn('Sync attempt failed...', err);
+      }
+    }
+
+    function renderDashboard() {
+      if (!petState) return;
+
+      // Header & Vitals
+      const volts = (petState.voltage || 4.19).toFixed(2);
+      document.getElementById('header-voltage').textContent = `${volts}V`;
+      document.getElementById('dock-readout-volts').textContent = `${volts} V`;
+
+      const battery = Math.min(100, Math.max(0, petState.energy || 85));
+      document.getElementById('vital-battery').textContent = `${battery}%`;
+      document.getElementById('vital-battery-bar').style.width = `${battery}%`;
+
+      const temp = (petState.temperature || 36.5).toFixed(1);
+      document.getElementById('vital-temp').textContent = `${temp}°C`;
+      document.getElementById('vital-temp-bar').style.width = `${Math.min(100, (temp / 60) * 100)}%`;
+
+      const gears = Math.min(100, Math.max(0, petState.cleanliness || 95));
+      document.getElementById('vital-gears').textContent = `${gears}%`;
+      document.getElementById('vital-gears-bar').style.width = `${gears}%`;
+
+      const health = Math.min(100, Math.max(0, petState.health || 100));
+      document.getElementById('vital-health').textContent = `${health}%`;
+      document.getElementById('vital-health-bar').style.width = `${health}%`;
+
+      // Speech & Live UNIHIKER Activity
+      document.getElementById('robot-speech').textContent = `"${petState.speech || 'Ready to build together? Battery charged.'}"`;
+      const act = (petState.activity || 'soldering_circuit').replace(/_/g, ' ');
+      document.getElementById('unihiker-activity-badge').textContent = act.toUpperCase();
+
+      // Level & Firmware
+      const lvl = petState.level || 1;
+      const fw = petState.firmware_version || 'v1.0.4';
+      document.getElementById('robot-level-pill').textContent = `Lv. 0${lvl}`;
+      document.getElementById('fw-level-display').textContent = `LVL 0${lvl}`;
+      document.getElementById('robot-fw-badge').textContent = `FW ${fw}`;
+      document.getElementById('fw-version-display').textContent = `${fw} "Master Maker"`;
+
+      // XP Bar
+      const xp = petState.xp || 45;
+      const xpNext = petState.xp_next || 100;
+      document.getElementById('xp-text').textContent = `${xp} / ${xpNext} XP`;
+      const xpPct = Math.min(100, Math.round((xp / xpNext) * 100));
+      document.getElementById('xp-bar').style.width = `${xpPct}%`;
+
+      // Charging dock states
+      const isCharging = Boolean(petState.charging);
+      const dockBadge = document.getElementById('dock-active-badge');
+      const dockBtn = document.getElementById('dock-toggle-btn');
+      const dockBolt = document.getElementById('dock-bolt-indicator');
+      const dockCurrent = document.getElementById('dock-readout-current');
+
+      if (isCharging) {
+        dockBadge.textContent = '⚡ FAST CHARGING (1.2A)';
+        dockBadge.className = 'font-mono text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-signal-orange border border-amber-300 animate-pulse';
+        dockBtn.textContent = 'DISENGAGE DOCK';
+        dockBtn.className = 'tactile-btn px-4 py-2 rounded-xl bg-white border border-signal-orange text-signal-orange font-brand font-bold text-xs shadow-xs';
+        dockBolt.classList.remove('hidden');
+        dockCurrent.textContent = '1.20 A';
+        document.getElementById('dock-status-text').textContent = '⚡ DOCKED CHARGING';
+      } else {
+        dockBadge.textContent = 'DOCK IDLE';
+        dockBadge.className = 'font-mono text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-graphite border border-amber-300';
+        dockBtn.textContent = 'ENGAGE DOCK';
+        dockBtn.className = 'tactile-btn px-4 py-2 rounded-xl bg-signal-orange text-white font-brand font-bold text-xs shadow-sm hover:brightness-105';
+        dockBolt.classList.add('hidden');
+        dockCurrent.textContent = '0.00 A';
+        document.getElementById('dock-status-text').textContent = '🔋 Battery Ready';
+      }
+
+      // Cooling Fan status
+      const fanActive = Boolean(petState.fan_active);
+      const fanSpin = document.getElementById('fan-icon-spin');
+      const fanBtn = document.getElementById('fan-toggle-btn');
+      const fanStatus = document.getElementById('fan-status-label');
+
+      if (fanActive) {
+        fanSpin.classList.add('spin-fan');
+        fanBtn.textContent = 'STOP FAN';
+        fanBtn.className = 'tactile-btn px-3 py-1.5 rounded-xl bg-blue-100 border border-electric-cyan text-electric-cyan font-brand font-bold text-xs';
+        fanStatus.textContent = 'Turbine Active (8,000 RPM)';
+      } else {
+        fanSpin.classList.remove('spin-fan');
+        fanBtn.textContent = 'BOOST FAN';
+        fanBtn.className = 'tactile-btn px-3 py-1.5 rounded-xl bg-white border border-amber-300 text-electric-cyan font-brand font-bold text-xs';
+        fanStatus.textContent = 'Fan Standby (Quiet Mode)';
+      }
+
+      // Mode highlight
+      const mode = (petState.mode || 'auto').toLowerCase();
+      document.querySelectorAll('.mode-btn').forEach(c => c.classList.remove('active'));
+      const activeModeBtn = document.getElementById(`mode-${mode}`);
+      if (activeModeBtn) activeModeBtn.classList.add('active');
+    }
+
+    // Care & Dock Actions
+    async function handleQuickCare(action) {
+      playSynthSound('click');
+      try {
+        const res = await fetch('/api/care', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+          playSynthSound('win');
+        }
+      } catch (err) {
+        console.error('Care action error:', err);
+      }
+    }
+
+    async function toggleDockCharging() {
+      playSynthSound('dock');
+      try {
+        const res = await fetch('/api/charge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'dock_toggle' })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+        }
+      } catch (err) {
+        console.error('Dock error:', err);
+      }
+    }
+
+    async function handleMaintenance(action) {
+      playSynthSound('click');
+      try {
+        const res = await fetch('/api/maintenance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+          playSynthSound('win');
+        }
+      } catch (err) {
+        console.error('Maintenance error:', err);
+      }
+    }
+
+    async function setMode(mode) {
+      playSynthSound('click');
+      try {
+        const res = await fetch('/api/mode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+        }
+      } catch (err) {
+        console.error('Mode error:', err);
+      }
+    }
+
+    async function sendRemoteCommand(command) {
+      playSynthSound('zap');
+      try {
+        const res = await fetch('/api/command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+          playSynthSound('win');
+        }
+      } catch (err) {
+        console.error('Remote command error:', err);
+      }
+    }
+
+    // Parts & Crafting
+    async function loadParts() {
+      try {
+        const res = await fetch('/api/parts');
+        const data = await res.json();
+        if (data.status === 'ok' && data.parts) {
+          data.parts.forEach(p => {
+            const el = document.getElementById(`part-count-${p.part_id}`);
+            if (el) el.textContent = `${p.count}x`;
+          });
+        }
+      } catch (err) {
+        console.error('Load parts error:', err);
+      }
+    }
+
+    async function craftItem(recipe) {
+      playSynthSound('zap');
+      try {
+        const res = await fetch('/api/craft', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipe })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+          loadParts();
+          playSynthSound('win');
+          alert(`🎉 ${data.crafted} assembled successfully! (+XP awarded)`);
+        } else {
+          alert(`⚠️ ${data.message}`);
+        }
+      } catch (err) {
+        console.error('Craft error:', err);
+      }
+    }
+
+    async function flashFirmware() {
+      playSynthSound('zap');
+      try {
+        const res = await fetch('/api/firmware', { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+          playSynthSound('win');
+          alert(`🚀 Firmware Flashed! Upgraded to Level ${data.state.level} (${data.firmware})`);
+        }
+      } catch (err) {
+        console.error('Firmware error:', err);
+      }
+    }
+
+    // Minigame 1: Circuit Wire Fixer Logic
+    let selectedLeftWire = null;
+    let wireMatches = 0;
+    let wireTimerInterval = null;
+    let wireTimeLeft = 15;
+
+    function selectMinigame(game) {
+      playSynthSound('click');
+      if (game === 'wire_fixer') {
+        document.getElementById('game-wire-fixer').classList.remove('hidden');
+        document.getElementById('game-rhythm-beat').classList.add('hidden');
+        document.getElementById('btn-select-wire').className = 'p-2.5 rounded-2xl bg-signal-orange text-white font-brand font-bold text-xs shadow-sm';
+        document.getElementById('btn-select-rhythm').className = 'p-2.5 rounded-2xl bg-white text-graphite font-brand font-bold text-xs border border-amber-200';
+      } else {
+        document.getElementById('game-wire-fixer').classList.add('hidden');
+        document.getElementById('game-rhythm-beat').classList.remove('hidden');
+        document.getElementById('btn-select-rhythm').className = 'p-2.5 rounded-2xl bg-signal-orange text-white font-brand font-bold text-xs shadow-sm';
+        document.getElementById('btn-select-wire').className = 'p-2.5 rounded-2xl bg-white text-graphite font-brand font-bold text-xs border border-amber-200';
+      }
+    }
+
+    function startWireGame() {
+      playSynthSound('zap');
+      wireMatches = 0;
+      wireTimeLeft = 15;
+      selectedLeftWire = null;
+      document.getElementById('wire-status').textContent = 'Match all 4 wires before timer expires!';
+      document.getElementById('wire-status').className = 'text-signal-orange font-bold';
+      document.querySelectorAll('.wire-term').forEach(b => b.classList.remove('opacity-40', 'border-workshop-green'));
+
+      clearInterval(wireTimerInterval);
+      wireTimerInterval = setInterval(() => {
+        wireTimeLeft--;
+        document.getElementById('wire-timer').textContent = `${wireTimeLeft}s`;
+        if (wireTimeLeft <= 0) {
+          clearInterval(wireTimerInterval);
+          document.getElementById('wire-status').textContent = 'Time expired! Try again.';
+          document.getElementById('wire-status').className = 'text-warm-coral font-bold';
+        }
+      }, 1000);
+    }
+
+    function selectWireTerminal(side, color) {
+      playSynthSound('click');
+      if (side === 'left') {
+        selectedLeftWire = color;
+        document.querySelectorAll("[id^='term-left-']").forEach(el => el.classList.remove('ring-2', 'ring-signal-orange'));
+        const activeEl = document.getElementById(`term-left-${color}`);
+        if (activeEl) activeEl.classList.add('ring-2', 'ring-signal-orange');
+        document.getElementById('wire-status').textContent = `Selected ${color.toUpperCase()} wire. Tap matching pin!`;
+      } else if (side === 'right' && selectedLeftWire) {
+        if (selectedLeftWire === color) {
+          playSynthSound('zap');
+          document.getElementById(`term-left-${color}`).classList.add('opacity-40', 'border-workshop-green');
+          document.getElementById(`term-right-${color}`).classList.add('opacity-40', 'border-workshop-green');
+          wireMatches++;
+          selectedLeftWire = null;
+          document.getElementById('wire-status').textContent = `Linked ${color.toUpperCase()} wire! (${wireMatches}/4)`;
+
+          if (wireMatches === 4) {
+            clearInterval(wireTimerInterval);
+            playSynthSound('win');
+            document.getElementById('wire-status').textContent = '🎉 Circuit complete! Salvaging parts...';
+            finishMinigame('wire_fixer', 150 + wireTimeLeft * 10);
+          }
+        } else {
+          playSynthSound('click');
+          document.getElementById('wire-status').textContent = `Short circuit! Try matching again.`;
+          document.getElementById('wire-status').className = 'text-warm-coral font-bold';
+        }
+      }
+    }
+
+    // Minigame 2: Workshop Rhythm Beat Logic
+    let rhythmScore = 0;
+    let rhythmInterval = null;
+    let notePos = 0;
+
+    function startRhythmGame() {
+      playSynthSound('zap');
+      rhythmScore = 0;
+      notePos = 0;
+      document.getElementById('rhythm-score').textContent = '0';
+      document.getElementById('rhythm-status').textContent = 'Tap HIT BEAT when gear reaches the line!';
+
+      clearInterval(rhythmInterval);
+      rhythmInterval = setInterval(() => {
+        notePos += 8;
+        if (notePos > 120) notePos = 0;
+        document.getElementById('rhythm-note').style.top = `${notePos}px`;
+      }, 50);
+    }
+
+    function tapRhythmBeat() {
+      if (notePos >= 70 && notePos <= 105) {
+        playSynthSound('win');
+        rhythmScore += 50;
+        document.getElementById('rhythm-score').textContent = rhythmScore;
+        document.getElementById('rhythm-status').textContent = '⚡ PERFECT HIT! Combo +50!';
+        document.getElementById('rhythm-status').className = 'text-signal-orange font-bold';
+        if (rhythmScore >= 250) {
+          clearInterval(rhythmInterval);
+          finishMinigame('rhythm_beat', rhythmScore);
+        }
+      } else {
+        playSynthSound('click');
+        document.getElementById('rhythm-status').textContent = 'Missed beat! Wait for alignment.';
+        document.getElementById('rhythm-status').className = 'text-graphite-muted';
+      }
+    }
+
+    async function finishMinigame(game, score) {
+      try {
+        const res = await fetch('/api/minigame', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ game, score })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          petState = data.state;
+          renderDashboard();
+          loadParts();
+          alert(`🏆 Minigame Victory!\nScore: ${score} pts\n+${data.xp_gain} XP\nSalvaged: ${data.drop.count}x ${data.drop.part_id.toUpperCase()}`);
+        }
+      } catch (err) {
+        console.error('Minigame finish error:', err);
+      }
+    }
+
+    // Missions & Diary
+    async function loadMissions() {
+      try {
+        const res = await fetch('/api/missions');
+        const data = await res.json();
+        if (data.status === 'ok' && data.missions) {
+          const container = document.getElementById('missions-container');
+          container.innerHTML = data.missions.map(m => {
+            const pct = Math.min(100, Math.round((m.progress / m.target) * 100));
+            return `
+              <div class="p-2.5 rounded-2xl bg-white border border-amber-200 shadow-xs">
+                <div class="flex justify-between items-center text-xs mb-1">
+                  <span class="font-brand font-bold text-graphite">${m.title}</span>
+                  <span class="text-signal-orange font-bold text-[10px]">+${m.xp_reward} XP</span>
+                </div>
+                <div class="text-[10px] text-graphite-muted flex items-center justify-between mb-1.5">
+                  <span>${m.description}</span>
+                  <span class="font-bold text-graphite">${m.progress}/${m.target}</span>
+                </div>
+                <div class="w-full h-1.5 bg-amber-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-signal-orange rounded-full" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (e) {
+        console.error('Missions error:', e);
+      }
+    }
+
+    async function loadDiary() {
+      try {
+        const res = await fetch('/api/diary');
+        const data = await res.json();
+        if (data.status === 'ok' && data.diary) {
+          const container = document.getElementById('diary-container');
+          container.innerHTML = data.diary.slice(0, 10).map(d => {
+            const timeStr = new Date(d.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `
+              <div class="p-2 rounded-xl bg-white border border-amber-200 flex justify-between items-center text-[10px] shadow-xs">
+                <div>
+                  <span class="font-brand font-bold text-graphite block">${d.title}</span>
+                  <span class="text-graphite-muted text-[9px]">${d.description || ''}</span>
+                </div>
+                <div class="text-right shrink-0 ml-2">
+                  <span class="text-[9px] font-mono text-gray-400 block">${timeStr}</span>
+                  ${d.xp_gained ? `<span class="text-[9px] text-signal-orange font-bold">+${d.xp_gained} XP</span>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (e) {
+        console.error('Diary error:', e);
+      }
+    }
+
+    // Boot
+    if (window.location.hostname) {
+      const ipEl = document.getElementById('ip-badge');
+      if (ipEl) ipEl.textContent = window.location.hostname;
+    }
+    fetchState();
+    loadParts();
+    setInterval(fetchState, 1500);
+  </script>
+</body>
+</html>

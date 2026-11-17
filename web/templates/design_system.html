@@ -1,0 +1,488 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Instructa-Gotchi: Design System &amp; Companion Board</title>
+<!-- Tailwind CSS v3 CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fredoka & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'maker-yellow': '#FFC928',
+            'signal-orange': '#F28B24',
+            'warm-ivory': '#FFF9EF',
+            'workshop-cream': '#F5F0E6',
+            'workshop-card': '#FFFDF8',
+            'graphite': '#242522',
+            'graphite-muted': '#4A4B47',
+            'electric-cyan': '#38BDF8',
+            'workshop-green': '#83A978',
+            'wood-brown': '#7E4C20',
+          },
+          fontFamily: {
+            heading: ['Fredoka', 'system-ui', 'sans-serif'],
+            body: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'maker': '0 8px 24px -4px rgba(126, 76, 32, 0.12), 0 3px 6px -2px rgba(126, 76, 32, 0.08)',
+            'maker-lg': '0 16px 36px -6px rgba(126, 76, 32, 0.16), 0 6px 12px -3px rgba(126, 76, 32, 0.1)',
+            'inset-panel': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+            'screen-inner': 'inset 0 3px 8px 0 rgba(0, 0, 0, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="custom-typography">
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #F5F0E6;
+      color: #242522;
+    }
+    .font-brand {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+    .pattern-grid {
+      background-image: radial-gradient(rgba(242, 139, 36, 0.18) 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="bg-workshop-cream text-graphite min-h-screen selection:bg-maker-yellow selection:text-graphite">
+<!-- BEGIN: Master Container (Mobile iOS Viewport Target) -->
+<div class="max-w-md mx-auto min-h-screen bg-workshop-cream shadow-2xl relative pb-16 overflow-hidden pattern-grid border-x border-amber-200/50">
+<!-- BEGIN: iOS Status Bar Mockup -->
+<div class="sticky top-0 z-50 bg-warm-ivory/95 backdrop-blur-md px-5 pt-3 pb-2 flex items-center justify-between text-xs font-semibold text-graphite border-b border-amber-200/60" data-purpose="ios-status-bar">
+<span>9:41</span>
+<div class="flex items-center gap-1.5 text-graphite">
+<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.56 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9z"></path></svg>
+<span class="text-[10px] font-bold tracking-wider px-1 py-0.5 rounded bg-amber-100 border border-amber-300">5G</span>
+<svg class="w-5 h-3 fill-current" viewBox="0 0 24 14"><rect fill="none" height="12" rx="2" stroke="currentColor" stroke-width="2" width="19" x="1" y="1"></rect><rect height="8" rx="1" width="14" x="3" y="3"></rect><rect height="5" rx="1" width="2" x="21" y="4.5"></rect></svg>
+</div>
+</div>
+<!-- END: iOS Status Bar Mockup -->
+<!-- BEGIN: HeaderHero -->
+<header class="p-4 pt-4" data-purpose="header-and-hero">
+<div class="bg-gradient-to-b from-warm-ivory to-amber-50/80 rounded-3xl p-5 border-2 border-amber-200 shadow-maker relative overflow-hidden">
+<!-- Ambient decorative corner glow -->
+<div class="absolute -right-12 -top-12 w-36 h-36 bg-maker-yellow/20 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Brand Top Bar -->
+<div class="flex items-center justify-between mb-3.5">
+<div class="flex items-center gap-2">
+<!-- Instructables Robot Mascot Badge -->
+<div class="w-8 h-8 rounded-xl bg-maker-yellow flex items-center justify-center border-2 border-graphite shadow-sm">
+<svg class="w-5 h-5 text-graphite" fill="currentColor" viewBox="0 0 24 24">
+<rect height="12" rx="3" stroke="#242522" stroke-width="1.5" width="14" x="5" y="8"></rect>
+<circle cx="9" cy="13" r="1.5"></circle>
+<circle cx="15" cy="13" r="1.5"></circle>
+<path d="M10 17h4" stroke="#242522" stroke-linecap="round" stroke-width="1.5"></path>
+<circle cx="12" cy="4" r="2"></circle>
+<path d="M12 6v2" stroke="#242522" stroke-width="2"></path>
+</svg>
+</div>
+<span class="font-brand font-bold text-lg tracking-tight text-graphite">instructables</span>
+</div>
+<span class="bg-signal-orange/15 text-signal-orange border border-signal-orange/30 text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            Design Board
+          </span>
+</div>
+<!-- Typography & Tagline -->
+<h1 class="font-brand text-3xl font-extrabold text-graphite leading-tight tracking-tight">
+          Instructa-Gotchi<span class="text-signal-orange">.</span>
+</h1>
+<p class="font-brand text-base font-semibold text-signal-orange tracking-wide mt-0.5">
+          A Digital Maker Companion
+        </p>
+<p class="text-xs text-graphite-muted leading-relaxed mt-2.5">
+          A playful, curious, and autonomous digital pet that lives inside a physical robot. It works, plays, learns, builds, and creates with you — inspired by the spirit of Instructables.
+        </p>
+<!-- Feature Pills Horizontal Scroll -->
+<div class="flex gap-1.5 mt-4 overflow-x-auto pb-1 custom-scrollbar">
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/90 text-graphite border border-amber-200/80 rounded-full px-2.5 py-1 whitespace-nowrap shadow-xs">
+            🤖 Virtual Pet
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/90 text-graphite border border-amber-200/80 rounded-full px-2.5 py-1 whitespace-nowrap shadow-xs">
+            🛠 Workshop
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/90 text-graphite border border-amber-200/80 rounded-full px-2.5 py-1 whitespace-nowrap shadow-xs">
+            🎮 Mini Games
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/90 text-graphite border border-amber-200/80 rounded-full px-2.5 py-1 whitespace-nowrap shadow-xs">
+            💡 Learn &amp; Explore
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/90 text-graphite border border-amber-200/80 rounded-full px-2.5 py-1 whitespace-nowrap shadow-xs">
+            🎵 Music &amp; Dance
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-white/90 text-graphite border border-amber-200/80 rounded-full px-2.5 py-1 whitespace-nowrap shadow-xs">
+            📱 Phone App
+          </span>
+</div>
+</div>
+</header>
+<!-- END: HeaderHero -->
+<!-- BEGIN: MasterCharacterIdentity (Section 1) -->
+<section class="px-4 py-2" data-purpose="character-mascot-identity">
+<div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+<!-- Section Header Badge -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 rounded-full bg-signal-orange"></span>
+<h2 class="font-brand font-bold text-lg text-graphite">01. Master 3D Mascot: TINKO</h2>
+</div>
+<span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
+            Vinyl 3D Art
+          </span>
+</div>
+<!-- Hero Mascot Showcase Image -->
+<div class="rounded-2xl overflow-hidden border-2 border-amber-300 bg-amber-50 shadow-inner mb-3.5 relative"><img alt="TINKO Master 3D Mascot Character Render" class="w-full h-auto object-cover block aspect-square rounded-2xl shadow-sm" src="/assets/stitch/high_quality_3d_render_of_the_exact_instructa_gotchi_robot_mascot_character/screen.png"><div class="absolute bottom-2 left-2 right-2 bg-graphite/85 backdrop-blur-md text-warm-ivory text-[10px] font-medium px-2.5 py-1.5 rounded-lg flex items-center justify-between border border-white/10"><span class="flex items-center gap-1.5 font-brand font-bold text-maker-yellow"><span class="w-1.5 h-1.5 rounded-full bg-signal-orange animate-pulse"></span> TINKO 3D Master Model</span><span class="text-[9px] font-mono text-gray-300">240×320 LCD Ready</span></div></div>
+<!-- Detailed Anatomy Spec Breakdown -->
+<div class="grid grid-cols-2 gap-2 text-xs">
+<div class="p-2.5 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="flex items-center gap-1.5 text-signal-orange font-bold font-brand text-xs">
+<span class="w-2 h-2 rounded-full bg-maker-yellow border border-graphite"></span>
+              Head Chassis
+            </div>
+<p class="text-[11px] text-graphite-muted mt-1 leading-normal">
+              Maker Yellow (#FFC928) with Signal Orange bevels, tactile graphite rotary ear bolts.
+            </p>
+</div>
+<div class="p-2.5 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="flex items-center gap-1.5 text-electric-cyan font-bold font-brand text-xs">
+<span class="w-2 h-2 rounded-full bg-electric-cyan border border-graphite"></span>
+              Visor &amp; Antenna
+            </div>
+<p class="text-[11px] text-graphite-muted mt-1 leading-normal">
+              Glossy dark visor screen with glowing catchlight eyes; beacon maker bulb antenna.
+            </p>
+</div>
+<div class="p-2.5 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="flex items-center gap-1.5 text-amber-800 font-bold font-brand text-xs">
+<span class="w-2 h-2 rounded-full bg-signal-orange border border-graphite"></span>
+              Utility Belt
+            </div>
+<p class="text-[11px] text-graphite-muted mt-1 leading-normal">
+              Leatherette pouch belt holding mini dual-end wrench, screwdrivers, and calipers.
+            </p>
+</div>
+<div class="p-2.5 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="flex items-center gap-1.5 text-workshop-green font-bold font-brand text-xs">
+<span class="w-2 h-2 rounded-full bg-workshop-green border border-graphite"></span>
+              Chest &amp; Limbs
+            </div>
+<p class="text-[11px] text-graphite-muted mt-1 leading-normal">
+              Recessed stamped maker gear, ball-jointed arms, reinforced chunky rubber boots.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: MasterCharacterIdentity (Section 1) -->
+<!-- BEGIN: TurnaroundAndExpressions (Section 2) -->
+<section class="px-4 py-2" data-purpose="turnaround-and-facial-expressions">
+<div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+<!-- Section Header Badge -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 rounded-full bg-maker-yellow"></span>
+<h2 class="font-brand font-bold text-lg text-graphite">02. Turnaround &amp; Expressions</h2>
+</div>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-graphite border border-amber-300">
+            Model Sheet
+          </span>
+</div>
+<!-- Embedded Turnaround Sheet Image -->
+<div class="rounded-2xl overflow-hidden border border-amber-200 bg-amber-50 mb-3 shadow-inner">
+<img alt="Character Turnaround and Emotion Matrix" class="w-full h-auto object-cover block" src="/assets/stitch/02_character_turnaround_and_expressions.png/screen.png">
+</div>
+<!-- Turnaround Angles & Mood Matrix Breakdown -->
+<div class="space-y-2 mt-2">
+<div class="p-2.5 rounded-xl bg-warm-ivory border border-amber-200 text-xs">
+<span class="font-brand font-bold text-graphite text-[12px] block mb-1">
+              🔄 4 Orthogonal Angles:
+            </span>
+<div class="grid grid-cols-4 gap-1 text-center text-[10px] font-semibold text-graphite-muted">
+<span class="bg-white py-1 rounded border border-amber-200">Front (0°)</span>
+<span class="bg-white py-1 rounded border border-amber-200">3/4 Front</span>
+<span class="bg-white py-1 rounded border border-amber-200">Side (90°)</span>
+<span class="bg-white py-1 rounded border border-amber-200">Back (180°)</span>
+</div>
+</div>
+<!-- Expression Tags -->
+<div class="p-2.5 rounded-xl bg-warm-ivory border border-amber-200 text-xs">
+<span class="font-brand font-bold text-graphite text-[12px] block mb-1.5">
+              🎭 10 Core Expressions in Frame Animation:
+            </span>
+<div class="flex flex-wrap gap-1.5 text-[11px]">
+<span class="px-2 py-0.5 rounded-md bg-yellow-100 text-amber-900 border border-yellow-300 font-medium">😊 Happy</span>
+<span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 font-medium">✨ Excited</span>
+<span class="px-2 py-0.5 rounded-md bg-sky-100 text-sky-900 border border-sky-300 font-medium">👀 Curious</span>
+<span class="px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 border border-purple-300 font-medium">😲 Surprised</span>
+<span class="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-900 border border-indigo-300 font-medium">🤔 Thinking</span>
+<span class="px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 border border-gray-300 font-medium">😴 Sleepy</span>
+<span class="px-2 py-0.5 rounded-md bg-red-100 text-red-900 border border-red-300 font-medium">💢 Frustrated</span>
+<span class="px-2 py-0.5 rounded-md bg-green-100 text-green-900 border border-green-300 font-medium">⭐ Proud</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: TurnaroundAndExpressions (Section 2) -->
+<!-- BEGIN: UnihikerDeviceScreen (Section 3) -->
+<section class="px-4 py-2" data-purpose="unihiker-device-ui">
+<div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+<!-- Section Header Badge -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 rounded-full bg-wood-brown"></span>
+<div>
+<h2 class="font-brand font-bold text-lg text-graphite leading-none">03. UNIHIKER M10 Device UI</h2>
+<span class="text-[10px] text-graphite-muted font-medium">240 × 320 Physical Touchscreen</span>
+</div>
+</div>
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-zinc-800 text-amber-400">
+            Python GUI
+          </span>
+</div>
+<!-- Embedded Device UI Visual Reference -->
+<div class="rounded-2xl overflow-hidden border border-amber-200 bg-amber-50 mb-3.5 shadow-inner">
+<img alt="UNIHIKER Physical Device Shell and 240x320 Screen Views" class="w-full h-auto object-cover block" src="/assets/stitch/03_device_ui_and_phone_app.png/screen.png">
+</div>
+<!-- Interactive Screen Simulation: 240x320 Ratio Container -->
+<div class="mx-auto w-[240px] h-[320px] bg-graphite rounded-2xl p-2.5 flex flex-col justify-between shadow-screen-inner border-4 border-amber-600/70 relative select-none"><div class="flex items-center justify-between text-[9px] text-amber-200 border-b border-white/10 pb-1"><span class="font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-signal-orange animate-pulse"></span> 10:24 TINKO</span><div class="flex items-center gap-1.5"><span class="bg-signal-orange/30 text-signal-orange text-[8px] px-1 rounded font-bold">WORKSHOP</span><svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"></path></svg></div></div><div class="bg-warm-ivory text-graphite text-[9px] font-medium py-1 px-2 rounded-lg shadow-sm border border-amber-300 text-center relative mt-1 z-10">"Ready to build together?"<div class="w-1.5 h-1.5 bg-warm-ivory border-r border-b border-amber-300 transform rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div></div><div class="my-auto py-1 flex flex-col items-center justify-center relative"><div class="w-24 h-24 rounded-2xl bg-amber-500/20 border-2 border-maker-yellow/60 flex items-center justify-center relative overflow-hidden shadow-inner"><img alt="Tinko UNIHIKER GUI Avatar" class="w-full h-full object-cover" src="/assets/stitch/high_quality_3d_render_of_the_exact_instructa_gotchi_robot_mascot_character/screen.png"><div class="absolute bottom-0 inset-x-0 bg-graphite/85 backdrop-blur-xs text-[7px] text-center text-amber-200 font-mono py-0.5 border-t border-white/10">Soldering...</div></div><div class="w-full px-2 mt-2"><div class="flex justify-between text-[8px] text-amber-100 font-medium mb-0.5"><span>Repairing gadget</span><span class="text-signal-orange font-bold">72%</span></div><div class="w-full h-1.5 bg-black/50 rounded-full overflow-hidden border border-white/20"><div class="h-full bg-gradient-to-r from-maker-yellow to-signal-orange rounded-full" style="width: 72%"></div></div></div></div><div class="grid grid-cols-4 gap-1 text-[7px] font-bold text-center bg-black/40 p-1 rounded-lg border border-white/10"><div><span class="text-amber-300 block">⚡ 82%</span><span class="text-[6px] text-gray-400 uppercase">Energy</span></div><div><span class="text-green-300 block">💚 90%</span><span class="text-[6px] text-gray-400 uppercase">Happy</span></div><div><span class="text-sky-300 block">💧 76%</span><span class="text-[6px] text-gray-400 uppercase">Clean</span></div><div><span class="text-orange-300 block">🍗 65%</span><span class="text-[6px] text-gray-400 uppercase">Hunger</span></div></div><div class="grid grid-cols-4 gap-0.5 pt-1 border-t border-white/10 text-[8px] text-center font-bold"><button class="py-1 text-signal-orange bg-white/10 rounded flex flex-col items-center"><span>🏠</span> Home</button><button class="py-1 text-gray-300 hover:text-white rounded flex flex-col items-center"><span>❤️</span> Care</button><button class="py-1 text-gray-300 hover:text-white rounded flex flex-col items-center"><span>⚙️</span> Modes</button><button class="py-1 text-gray-300 hover:text-white rounded flex flex-col items-center"><span>⋯</span> More</button></div></div>
+<p class="text-center text-[11px] text-graphite-muted mt-2 font-medium">
+          Laser-cut wood chassis packaging with 2.8" Portrait IPS Screen.
+        </p>
+</div>
+</section>
+<!-- END: UnihikerDeviceScreen (Section 3) -->
+<!-- BEGIN: PhoneCompanionApp (Section 4) -->
+<section class="px-4 py-2" data-purpose="phone-companion-mobile-app">
+<div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+<!-- Section Header Badge -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 rounded-full bg-electric-cyan"></span>
+<div>
+<h2 class="font-brand font-bold text-lg text-graphite leading-none">04. Phone Companion App</h2>
+<span class="text-[10px] text-graphite-muted font-medium">Flask Web-App Over Local Wi-Fi</span>
+</div>
+</div>
+<span class="flex items-center gap-1 text-[10px] font-bold text-workshop-green bg-green-100 px-2 py-0.5 rounded-full border border-green-300">
+<span class="w-1.5 h-1.5 rounded-full bg-workshop-green animate-ping"></span> Live Sync
+          </span>
+</div>
+<!-- Workshop Activities & Architecture Image Embed -->
+<div class="rounded-2xl overflow-hidden border border-amber-200 bg-amber-50 mb-3 shadow-inner">
+<img alt="Workshop Activities Breakdown and Architecture Diagram" class="w-full h-auto object-cover block" src="/assets/stitch/04_workshop_and_system_architecture.png/screen.png">
+</div>
+<!-- Phone App Dashboard Recreation Card -->
+<div class="bg-warm-ivory rounded-2xl p-3 border border-amber-300/80 shadow-sm space-y-3">
+<!-- Companion Header -->
+<div class="flex items-center justify-between">
+<div>
+<span class="text-xs text-graphite-muted font-medium">Companion Network</span>
+<h3 class="font-brand font-bold text-base text-graphite">Hi, Maker! 👋</h3>
+</div>
+<div class="text-right">
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-maker-yellow/30 text-graphite font-bold border border-amber-300">
+                TINKO v1.0.4
+              </span>
+<span class="block text-[9px] text-graphite-muted mt-0.5">IP: 192.168.4.1</span>
+</div>
+</div>
+<!-- Pet Status Snapshot Card -->
+<div class="bg-white rounded-xl p-2.5 border border-amber-200 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-xl bg-amber-100 border border-maker-yellow flex items-center justify-center text-xl"><img alt="TINKO Avatar" class="w-full h-full object-cover rounded-xl" src="/assets/stitch/high_quality_3d_render_of_the_exact_instructa_gotchi_robot_mascot_character/screen.png"></div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-brand font-bold text-sm text-graphite">TINKO</span>
+<span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-signal-orange">Lv. 03</span>
+</div>
+<div class="text-[10px] text-graphite-muted">Exp: 185 / 250 XP</div>
+</div>
+</div>
+<span class="px-2 py-1 rounded-lg bg-green-50 text-workshop-green border border-green-200 text-[10px] font-bold">
+              Autonomous
+            </span>
+</div>
+<!-- Care Grid Action Buttons -->
+<div>
+<span class="text-[11px] font-bold text-graphite font-brand block mb-1.5">Direct Care Actions</span>
+<div class="grid grid-cols-4 gap-1.5">
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+<span class="text-lg">🔋</span>
+<span class="text-[9px] font-bold text-graphite mt-1">Recharge</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+<span class="text-lg">🔧</span>
+<span class="text-[9px] font-bold text-graphite mt-1">Tune-up</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+<span class="text-lg">🎮</span>
+<span class="text-[9px] font-bold text-graphite mt-1">Minigame</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-xl bg-white border border-amber-200 hover:border-signal-orange active:scale-95 transition-all shadow-xs">
+<span class="text-lg">💤</span>
+<span class="text-[9px] font-bold text-graphite mt-1">Sleep</span>
+</button>
+</div>
+</div>
+<!-- Operating Modes Selector Grid -->
+<div>
+<span class="text-[11px] font-bold text-graphite font-brand block mb-1.5">8 Operating Modes</span>
+<div class="grid grid-cols-4 gap-1 text-[10px] font-semibold text-center">
+<span class="py-1 px-1 rounded-md bg-signal-orange text-white font-bold shadow-xs">Auto</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Workshop</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Music</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Game</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Study</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Focus</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Companion</span>
+<span class="py-1 px-1 rounded-md bg-white border border-amber-200 text-graphite">Sleep</span>
+</div>
+</div>
+<!-- Daily Mission Progress Card -->
+<div class="p-2.5 rounded-xl bg-amber-50 border border-amber-300">
+<div class="flex justify-between items-center text-xs mb-1">
+<span class="font-bold text-graphite font-brand">🔨 Workshop Missions</span>
+<span class="text-signal-orange font-bold text-[10px]">+20 XP</span>
+</div>
+<div class="text-[11px] text-graphite-muted flex items-center justify-between mb-1.5">
+<span>Complete 3 workshop builds</span>
+<span class="font-bold text-graphite">2/3</span>
+</div>
+<div class="w-full h-1.5 bg-amber-200 rounded-full overflow-hidden">
+<div class="h-full bg-signal-orange rounded-full" style="width: 66%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PhoneCompanionApp (Section 4) -->
+<!-- BEGIN: DesignTokensAndSystem (Section 5) -->
+<section class="px-4 py-2" data-purpose="design-tokens-and-palette">
+<div class="bg-workshop-card rounded-3xl p-4 border border-amber-200 shadow-maker">
+<!-- Section Header Badge -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 rounded-full bg-workshop-green"></span>
+<h2 class="font-brand font-bold text-lg text-graphite">05. Design Tokens &amp; Palette</h2>
+</div>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-graphite border border-amber-300">
+            Design Tokens
+          </span>
+</div>
+<!-- Color Swatches Grid -->
+<div class="grid grid-cols-2 gap-2 text-xs">
+<!-- Maker Yellow -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="w-7 h-7 rounded-lg bg-[#FFC928] border border-graphite shadow-xs shrink-0"></div>
+<div>
+<span class="font-bold block text-graphite text-[11px]">Maker Yellow</span>
+<span class="font-mono text-[9px] text-graphite-muted">#FFC928</span>
+</div>
+</div>
+<!-- Signal Orange -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="w-7 h-7 rounded-lg bg-[#F28B24] border border-graphite shadow-xs shrink-0"></div>
+<div>
+<span class="font-bold block text-graphite text-[11px]">Signal Orange</span>
+<span class="font-mono text-[9px] text-graphite-muted">#F28B24</span>
+</div>
+</div>
+<!-- Workshop Cream -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="w-7 h-7 rounded-lg bg-[#F5F0E6] border border-gray-400 shadow-xs shrink-0"></div>
+<div>
+<span class="font-bold block text-graphite text-[11px]">Workshop Cream</span>
+<span class="font-mono text-[9px] text-graphite-muted">#F5F0E6</span>
+</div>
+</div>
+<!-- Warm Ivory -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="w-7 h-7 rounded-lg bg-[#FFF9EF] border border-amber-300 shadow-xs shrink-0"></div>
+<div>
+<span class="font-bold block text-graphite text-[11px]">Warm Ivory</span>
+<span class="font-mono text-[9px] text-graphite-muted">#FFF9EF</span>
+</div>
+</div>
+<!-- Workshop Green -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="w-7 h-7 rounded-lg bg-[#83A978] border border-graphite shadow-xs shrink-0"></div>
+<div>
+<span class="font-bold block text-graphite text-[11px]">Workshop Green</span>
+<span class="font-mono text-[9px] text-graphite-muted">#83A978</span>
+</div>
+</div>
+<!-- Electric Cyan -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-warm-ivory border border-amber-200">
+<div class="w-7 h-7 rounded-lg bg-[#38BDF8] border border-graphite shadow-xs shrink-0"></div>
+<div>
+<span class="font-bold block text-graphite text-[11px]">Electric Cyan</span>
+<span class="font-mono text-[9px] text-graphite-muted">#38BDF8</span>
+</div>
+</div>
+</div>
+<!-- Typography & System Hierarchy Tokens -->
+<div class="mt-3 p-3 rounded-2xl bg-warm-ivory border border-amber-200 space-y-2 text-xs">
+<span class="font-brand font-bold text-graphite block text-[12px]">Typography &amp; Engineering Specs</span>
+<div class="flex items-baseline justify-between border-b border-amber-200/80 pb-1.5">
+<span class="font-brand font-bold text-sm text-graphite">Fredoka Rounded</span>
+<span class="text-[10px] text-graphite-muted">Brand Headings &amp; Badges</span>
+</div>
+<div class="flex items-baseline justify-between border-b border-amber-200/80 pb-1.5">
+<span class="font-body font-semibold text-xs text-graphite">Plus Jakarta Sans</span>
+<span class="text-[10px] text-graphite-muted">Body &amp; Interface Text</span>
+</div>
+<div class="flex items-baseline justify-between">
+<span class="font-mono font-medium text-xs text-amber-800">JetBrains Mono</span>
+<span class="text-[10px] text-graphite-muted">Code, Telemetry, Coordinates</span>
+</div>
+</div>
+<!-- Architecture Summary Badge -->
+<div class="mt-3 p-3 rounded-2xl bg-graphite text-warm-ivory text-xs space-y-1.5">
+<div class="flex items-center justify-between text-maker-yellow font-brand font-bold">
+<span class="flex items-center gap-1.5">
+<span>⚡</span> System Architecture
+            </span>
+<span class="text-[10px] font-mono text-gray-300">UNIHIKER M10 + Debian</span>
+</div>
+<p class="text-[11px] text-gray-300 leading-snug">
+            Single-board computer runs unihiker.GUI on 2.8" LCD + Flask local server with SQLite database for seamless phone synchronization.
+          </p>
+</div>
+</div>
+</section>
+<!-- END: DesignTokensAndSystem (Section 5) -->
+<!-- BEGIN: FooterMasterSheet -->
+<footer class="px-6 py-6 text-center" data-purpose="board-footer">
+<div class="w-12 h-1 bg-amber-300/80 rounded-full mx-auto mb-3"></div>
+<p class="font-brand font-bold text-xs text-graphite">
+        Instructa-Gotchi Digital Companion Master Board
+      </p>
+<p class="text-[10px] text-graphite-muted mt-0.5">
+        Designed for Maker Culture • Inspired by Instructables
+      </p>
+</footer>
+<!-- END: FooterMasterSheet -->
+</div>
+<!-- END: Master Container -->
+
+
+</body></html>

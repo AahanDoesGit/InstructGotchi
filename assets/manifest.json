@@ -1,0 +1,376 @@
+{
+  "project": "Instructa-Gotchi",
+  "version": "1.0.0",
+  "categories": {
+    "characters": [
+      {
+        "name": "master_character",
+        "path": "assets/characters/master_character.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      }
+    ],
+    "expressions": [
+      {
+        "name": "idle",
+        "path": "assets/expressions/idle.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "happy",
+        "path": "assets/expressions/happy.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "excited",
+        "path": "assets/expressions/excited.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "curious",
+        "path": "assets/expressions/curious.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "surprised",
+        "path": "assets/expressions/surprised.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "bored",
+        "path": "assets/expressions/bored.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "sleepy",
+        "path": "assets/expressions/sleepy.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "frustrated",
+        "path": "assets/expressions/frustrated.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "proud",
+        "path": "assets/expressions/proud.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "thinking",
+        "path": "assets/expressions/thinking.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "sad",
+        "path": "assets/expressions/sad.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "focused",
+        "path": "assets/expressions/focused.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "laughing",
+        "path": "assets/expressions/laughing.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "confused",
+        "path": "assets/expressions/confused.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "celebrating",
+        "path": "assets/expressions/celebrating.png",
+        "size": [
+          140,
+          140
+        ],
+        "format": "RGBA PNG"
+      }
+    ],
+    "animations": [
+      {
+        "sequence": "idle",
+        "frame": 0,
+        "path": "assets/animations/idle_0.png",
+        "size": [
+          140,
+          140
+        ]
+      },
+      {
+        "sequence": "idle",
+        "frame": 1,
+        "path": "assets/animations/idle_1.png",
+        "size": [
+          140,
+          140
+        ]
+      },
+      {
+        "sequence": "idle",
+        "frame": 2,
+        "path": "assets/animations/idle_2.png",
+        "size": [
+          140,
+          140
+        ]
+      },
+      {
+        "sequence": "idle",
+        "frame": 3,
+        "path": "assets/animations/idle_3.png",
+        "size": [
+          140,
+          140
+        ]
+      }
+    ],
+    "backgrounds": [
+      {
+        "name": "workshop_default",
+        "path": "assets/backgrounds/workshop_default.png",
+        "size": [
+          240,
+          320
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "workshop_night",
+        "path": "assets/backgrounds/workshop_night.png",
+        "size": [
+          240,
+          320
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "workshop_focus",
+        "path": "assets/backgrounds/workshop_focus.png",
+        "size": [
+          240,
+          320
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "workshop_music",
+        "path": "assets/backgrounds/workshop_music.png",
+        "size": [
+          240,
+          320
+        ],
+        "format": "RGBA PNG"
+      }
+    ],
+    "icons": [
+      {
+        "name": "mode_auto",
+        "path": "assets/icons/mode_auto.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_workshop",
+        "path": "assets/icons/mode_workshop.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_music",
+        "path": "assets/icons/mode_music.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_game",
+        "path": "assets/icons/mode_game.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_study",
+        "path": "assets/icons/mode_study.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_focus",
+        "path": "assets/icons/mode_focus.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_companion",
+        "path": "assets/icons/mode_companion.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "mode_sleep",
+        "path": "assets/icons/mode_sleep.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "care_hunger",
+        "path": "assets/icons/care_hunger.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "care_happiness",
+        "path": "assets/icons/care_happiness.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "care_energy",
+        "path": "assets/icons/care_energy.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "care_clean",
+        "path": "assets/icons/care_clean.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      },
+      {
+        "name": "care_health",
+        "path": "assets/icons/care_health.png",
+        "size": [
+          32,
+          32
+        ],
+        "format": "RGBA PNG"
+      }
+    ],
+    "master_sheets": [
+      {
+        "name": "design_system_master_sheet",
+        "path": "assets/design_system_master_sheet.png",
+        "size": [
+          1376,
+          768
+        ],
+        "description": "Unified 3D mascot, turnaround/expression strip, UNIHIKER 240x320 UI, phone app mockup, and color tokens"
+      },
+      {
+        "name": "complete_project_reference_sheet",
+        "path": "assets/complete_project_reference_sheet.png",
+        "size": [
+          2048,
+          1152
+        ],
+        "description": "Unified master design board embedding the original 3D reference mascot, turnaround/expression strip, 5 UNIHIKER 240x320 UI screens, workshop scene, and color swatches"
+      }
+    ]
+  },
+  "source": "visual_references/",
+  "reference_files": [
+    "01_mascot_and_product_identity.png",
+    "02_character_turnaround_and_expressions.png",
+    "03_device_ui_and_phone_app.png",
+    "04_workshop_and_system_architecture.png"
+  ]
+}

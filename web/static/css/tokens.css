@@ -1,0 +1,28 @@
+:root {
+  --bg-workshop-cream: #F5F0E6;
+  --bg-warm-ivory: #FFF9EF;
+  --bg-panel: #ECE5D8;
+  --bg-night: #1C1D1F;
+  --bg-focus: #22252A;
+
+  --text-graphite: #242522;
+  --text-deep-ink: #302D28;
+  --text-muted-steel: #879099;
+  --text-light: #F5F0E6;
+
+  --color-maker-yellow: #FFC928;
+  --color-signal-orange: #F28B24;
+  --color-warm-coral: #ED735C;
+  --color-workshop-green: #83A978;
+  --color-blueprint-blue: #3B82F6;
+  --color-electric-cyan: #38BDF8;
+
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 2px 4px rgba(36, 37, 34, 0.06);
+  --shadow-md: 0 4px 12px rgba(36, 37, 34, 0.08);
+}
+

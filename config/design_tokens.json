@@ -1,0 +1,100 @@
+{
+  "project": {
+    "name": "Instructa-Gotchi",
+    "version": "1.0.0",
+    "target_hardware": "DFRobot UNIHIKER M10",
+    "display": {
+      "width": 240,
+      "height": 320,
+      "orientation": "portrait",
+      "touch_enabled": true
+    }
+  },
+  "colors": {
+    "background": {
+      "workshop_cream": "#F5F0E6",
+      "warm_ivory": "#FFF9EF",
+      "panel_bg": "#ECE5D8",
+      "night_bg": "#1C1D1F",
+      "focus_bg": "#22252A"
+    },
+    "text": {
+      "graphite": "#242522",
+      "deep_ink": "#302D28",
+      "muted_steel": "#879099",
+      "light_text": "#F5F0E6"
+    },
+    "primary": {
+      "maker_yellow": "#FFC928",
+      "signal_orange": "#F28B24",
+      "warm_coral": "#ED735C"
+    },
+    "accents": {
+      "workshop_green": "#83A978",
+      "blueprint_blue": "#3B82F6",
+      "electric_cyan": "#38BDF8",
+      "laser_purple": "#A855F7"
+    },
+    "stats": {
+      "hunger": "#F28B24",
+      "happiness": "#FFC928",
+      "energy": "#38BDF8",
+      "cleanliness": "#83A978",
+      "health": "#ED735C"
+    }
+  },
+  "layout": {
+    "screen_width": 240,
+    "screen_height": 320,
+    "status_bar_height": 28,
+    "nav_bar_height": 38,
+    "content_area": {
+      "x": 0,
+      "y": 28,
+      "width": 240,
+      "height": 254
+    },
+    "character_anchor": {
+      "center_x": 120,
+      "center_y": 150,
+      "box_width": 140,
+      "box_height": 140
+    },
+    "speech_bubble": {
+      "x": 16,
+      "y": 34,
+      "width": 208,
+      "height": 38,
+      "radius": 8
+    }
+  },
+  "typography": {
+    "font_family": "Inter, system-ui, -apple-system, sans-serif",
+    "sizes": {
+      "micro": 9,
+      "caption": 10,
+      "body": 12,
+      "subtitle": 14,
+      "title": 16,
+      "header": 18
+    }
+  },
+  "modes": [
+    "auto",
+    "workshop",
+    "music",
+    "game",
+    "study",
+    "focus",
+    "companion",
+    "sleep"
+  ],
+  "needs": [
+    "hunger",
+    "happiness",
+    "energy",
+    "cleanliness",
+    "health"
+  ]
+}
+

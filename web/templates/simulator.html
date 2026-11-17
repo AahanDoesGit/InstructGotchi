@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Instructa-Gotchi — Mac Testing Laboratory</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #242522;
+      color: #F5F0E6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #302D28;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #FFC928;
+    }
+    .header-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FFC928;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-badge {
+      background: #83A978;
+      color: white;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .main-workspace {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      padding: 30px;
+      flex-wrap: wrap;
+    }
+    .panel {
+      background: #1C1D1F;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .panel-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #F28B24;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    /* UNIHIKER Cardboard Robot Chassis Mockup */
+    .robot-enclosure {
+      width: 320px;
+      background: #FFC928;
+      border-radius: 28px;
+      padding: 24px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 8px 0 #DCA014, 0 16px 24px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    /* Antenna */
+    .antenna-pole {
+      position: absolute;
+      top: -24px;
+      width: 8px;
+      height: 24px;
+      background: #879099;
+      border-radius: 4px;
+    }
+    .antenna-orb {
+      position: absolute;
+      top: -38px;
+      width: 18px;
+      height: 18px;
+      background: #38BDF8;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #38BDF8;
+    }
+    /* 240x320 Touchscreen Display (Rendered at 1.15x: 276x368) */
+    .screen-bezel {
+      width: 276px;
+      height: 368px;
+      background: #242522;
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
+      position: relative;
+      cursor: crosshair;
+    }
+    #device-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .chassis-badge {
+      margin-top: 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #302D28;
+      letter-spacing: 1px;
+    }
+    .screen-hint {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #879099;
+    }
+    /* Phone Mockup Frame */
+    .phone-frame {
+      width: 340px;
+      height: 600px;
+      background: #000;
+      border-radius: 36px;
+      padding: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 3px solid #3A3B3C;
+    }
+    .phone-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 26px;
+      background: #FFF9EF;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">
+      <span>🤖 Instructa-Gotchi</span>
+      <span class="header-badge">Mac Testing Lab</span>
+    </div>
+    <div style="font-size: 12px; color: #879099; display: flex; align-items: center; gap: 10px;">
+      <a href="/design-system" target="_blank" style="color: #38BDF8; text-decoration: none; font-weight: 600; background: #3E3B34; padding: 4px 10px; border-radius: 6px;">✨ Stitch Design System</a>
+      <a href="/assets/complete_project_reference_sheet.png" target="_blank" style="color: #FFC928; text-decoration: none; font-weight: 600; background: #3E3B34; padding: 4px 10px; border-radius: 6px;">📐 Master Board</a>
+      <span>Host: <strong style="color:#FFF9EF;">localhost:8088</strong></span>
+    </div>
+  </header>
+
+  <main class="main-workspace">
+    <!-- 1. Physical UNIHIKER M10 Simulation -->
+    <div class="panel">
+      <div class="panel-title">UNIHIKER M10 Screen (Living Character in Workshop)</div>
+      <div class="robot-enclosure">
+        <div class="antenna-orb"></div>
+        <div class="antenna-pole"></div>
+        <div class="screen-bezel" id="screen-bezel">
+          <img id="device-screen" src="/api/device/screen.png" alt="UNIHIKER Display">
+        </div>
+        <div class="chassis-badge">UNIHIKER 2.8" TOUCHSCREEN</div>
+      </div>
+      <div class="screen-hint">👉 Pure living character & workshop. Tap anywhere on screen to pet!</div>
+    </div>
+
+    <!-- 2. Companion Mobile Web App -->
+    <div class="panel">
+      <div class="panel-title">Phone Companion Web App</div>
+      <div class="phone-frame">
+        <iframe src="/" id="phone-iframe"></iframe>
+      </div>
+      <div class="screen-hint">Syncs instantly with the physical UNIHIKER simulation via SQLite WAL</div>
+    </div>
+  </main>
+
+  <script>
+    const screenImg = document.getElementById("device-screen");
+    const screenBezel = document.getElementById("screen-bezel");
+
+    // Click on simulated UNIHIKER screen sends touch coordinates in (240x320) space
+    screenBezel.addEventListener("click", async (e) => {
+      const rect = screenImg.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      // Map from rendered DOM size to actual 240x320 resolution
+      const actualX = Math.round((clickX / rect.width) * 240);
+      const actualY = Math.round((clickY / rect.height) * 320);
+
+      try {
+        await fetch("/api/device/touch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ x: actualX, y: actualY })
+        });
+        refreshScreen();
+      } catch (err) {
+        console.error("Touch dispatch error:", err);
+      }
+    });
+
+    // Paced screen refresh (4-8 FPS for simulation viewing)
+    function refreshScreen() {
+      screenImg.src = "/api/device/screen.png?t=" + Date.now();
+    }
+    setInterval(refreshScreen, 250);
+  </script>
+</body>
+</html>
+
